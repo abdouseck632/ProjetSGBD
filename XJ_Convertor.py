@@ -46,6 +46,11 @@ class Relations():
 def CreateSvgFile(SvgFileName):
     svg_document = svgwrite.Drawing(filename =SvgFileName,
                                     size = (2500,2500))
+    svg_document.add(svg_document.rect(insert = (50, 50),
+                                       size = (2000, 200),
+                                       stroke_width = "1",
+                                       stroke = "black",
+                                       fill = "rgb(145,240,200)"))
 def parsefile(file):
     parser = make_parser()
     parser.setContentHandler(ContentHandler())
@@ -56,18 +61,79 @@ def XmlExtraction(xmlfile):
     entite=[]
     element=[]
     valeur=[]
+    otherclas=[]
+    relat=[]
+    relations=[]
+    nomrela="nom de la relation"
     i=0
+
     for child in root:
         entite.append(child.tag)
+        for attributs in child:
+            if attributs.tag=="ATTRIBUT":
+                for attribut in attributs:
+                    element.append(attribut.tag)
+                    valeur.append(attribut.text)
+            
 
-        for attribut in child:
-            element.append(attribut.tag)
-            valeur.append(attribut.text)
+                    # valeur.append(attribut.text)
         clas.append(Classes(entite[i],element,valeur))
         i+=1
         element=[]
         valeur=[]
+    for child in root:
+        tm=0
+        entite.append(child.tag)
+        for attributs in child:
+            if attributs.tag!="ATTRIBUT":
+                for attribut in attributs:
+                    if attribut.tag!=child.tag:
+                        otherclas.append(attribut.tag)
+                    nomrela=attributs.get('NAME')
+
+        relat.append(Relations(child.tag,otherclas,"simple",nomrela))
+        i+=1
+        element=[]
+        valeur=[]
     Dessin(clas)
+    for value in relat:
+        print("*******************")
+        print(value.classes)
+        print(value.otherclass[0])
+        print("*******************")
+
+
+    # for rel in relat:
+    #     AssociationLine(rel,relat,coord,10,15,25)
+def lineXML(rel,relation,coord):
+    CoordOther=[]
+    CoordClass=[]
+    nomrelation="Nom de la classe"
+    print("Je suis la")
+    nomrelation="Nom de la classe"
+    print("coord",coord)
+    for cord in coord:
+        if relat[1].classes[0]==cord.nomclasse:
+            print(cord.cx,":",cord.cy)
+            print(rel.otherclass)
+            CoordClass.append(cord.cx)
+            CoordClass.append(cord.cy)
+        print(cord.cx,":",cord.cy)
+    for rela in relat:
+        if rela.classes==relat[1].classes:
+            other=rela.otherclass[0]
+            print("je suis dans ce boucle ",other)
+            for cord in coord:
+                if other==cord.nomclasse[0]:
+                    # print(cord.cx,":",cord.cy)
+                    CoordOther.append(cord.cx)
+                    CoordOther.append(cord.cy)
+                    print(cord.cx,":",cord.cy)
+                    nomrelation=rela.nomrelations[0]
+                print(CoordOther)
+    print("la taille du des autres ",len(CoordOther))
+
+
 def CreateTable(cx,cy,nomclasse,attribut,nbreattribut):
 #augmente de la largeur du table si le nbre d'argument est superieur a 5
     largeurp=largeur
@@ -206,7 +272,7 @@ def ExtractionRelation(clas):
         valeur=[]
         other=[]
     return clases
-def AssociationLine(rel,coord,a,b,declage):
+def AssociationLine(rel,relations,coord,a,b,declage):
     CoordOther=[]
     CoordClass=[]
     nomrelation="Nom de la classe"
@@ -389,10 +455,7 @@ def Dessin(clas):
 
 
 
-    AssociationLine(relations[3],coord,50,50,0)
-    AssociationLine(relations[0],coord,50,50,0)
-    AssociationLine(relations[1],coord,50,50,150)
-    AssociationLine(relations[2],coord,50,50,200)
+
     print(svg_document.tostring())
     svg_document.save()
     for value in coord:
@@ -457,6 +520,8 @@ if __name__ == '__main__':
                 if len(sys.argv)==i:
                     sys.exit()
                 i+=2
+                if len(sys.argv)==i:
+                    sys.exit()
             if sys.argv[i]=="-o" :
                     if len(sys.argv)==i:
                         sys.exit()
@@ -467,6 +532,7 @@ if __name__ == '__main__':
 
                                                             size = (1500,1500))
                     XmlExtraction(sys.argv[i-1])
+                    # lineXML()
             else:
                 print("pas de fichier svg")
 
@@ -515,7 +581,15 @@ if __name__ == '__main__':
                 classe=ValidatorAndExtractorJson(sys.argv[i-1])
                 classe=Classse(classe)
                 Dessin(classe)
+                AssociationLine(relations[3],relations,coord,50,50,0)
+                AssociationLine(relations[0],relations,coord,50,50,0)
+                AssociationLine(relations[1],relations,coord,50,50,150)
+                AssociationLine(relations[2],relations,coord,50,50,200)
                 # AssociationLine(relations[1],coord,0,0)
+
+        else:
+            print("format de fichier non prise en compte")
+            print("Ce fichier doit respecter")
 
         else:
             print("format de fichier non prise en compte")
