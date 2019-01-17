@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<PartsRelation>
+    <JOUEUR>
+        <ATTRIBUT>
+            <IDENTIFIANT>P1</IDENTIFIANT>
+            <NOM>Nut</NOM>
+            <PRENOM>Red</PRENOM>
+            <SEXE>12.0</SEXE>
+        </ATTRIBUT>
+        <RELATIONS NAME="APPARTIENT">
+            <EQUIPE></EQUIPE>
+        </RELATIONS>
+    </JOUEUR>
+    <EQUIPE>
+        <ATTRIBUT>
+            <IDENTIFIANT>P1</IDENTIFIANT>
+            <NOM>Nut</NOM>
+            <DIVISION>Red</DIVISION>
+            <DATE_CREATION>12.0</DATE_CREATION>
+        </ATTRIBUT>
+        <RELATIONS NAME="APPARTIENT">
+            <JOUEUR></JOUEUR>
+        </RELATIONS>
+    </EQUIPE>
+    <MATCH>
+        <ATTRIBUT>
+            <IDENTIFIANT>P1</IDENTIFIANT>
+            <LIEU>Nut</LIEU>
+            <DATE>Red</DATE>
+            <SCORE>12.0</SCORE>
+        </ATTRIBUT>
+        <RELATIONS NAME="JOUE">
+            <JOUEUR></JOUEUR>
+        </RELATIONS>
+    </MATCH>
+
+
+
+</PartsRelation>
